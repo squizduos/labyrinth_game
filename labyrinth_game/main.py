@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from labyrinth_game.constants import COMMANDS
 from labyrinth_game.player_actions import (
     get_input,
     move_player,
@@ -7,7 +8,12 @@ from labyrinth_game.player_actions import (
     take_item,
     use_item,
 )
-from labyrinth_game.utils import describe_current_room, show_help, solve_puzzle
+from labyrinth_game.utils import (
+    attempt_open_treasure,
+    describe_current_room,
+    show_help,
+    solve_puzzle,
+)
 
 
 def process_command(game_state, command_line):
@@ -26,6 +32,8 @@ def process_command(game_state, command_line):
                 move_player(game_state, argument)
             else:
                 print("Куда идти? Укажите направление (north/south/east/west).")
+        case "north" | "south" | "east" | "west":
+            move_player(game_state, command)
         case "take":
             if argument:
                 take_item(game_state, argument)
@@ -39,9 +47,12 @@ def process_command(game_state, command_line):
         case "inventory" | "inv":
             show_inventory(game_state)
         case "solve":
-            solve_puzzle(game_state)
+            if game_state["current_room"] == "treasure_room":
+                attempt_open_treasure(game_state)
+            else:
+                solve_puzzle(game_state)
         case "help":
-            show_help()
+            show_help(COMMANDS)
         case "quit" | "exit":
             print("Спасибо за игру!")
             game_state["game_over"] = True
