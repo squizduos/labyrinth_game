@@ -2,6 +2,7 @@ from labyrinth_game.constants import ROOMS
 
 
 def get_input(prompt="> "):
+    """Получает ввод от пользователя с обработкой прерываний."""
     try:
         return input(prompt).strip().lower()
     except (KeyboardInterrupt, EOFError):
@@ -10,6 +11,7 @@ def get_input(prompt="> "):
 
 
 def show_inventory(game_state):
+    """Выводит содержимое инвентаря игрока."""
     if game_state["player_inventory"]:
         print("\nВаш инвентарь:")
         for item in game_state["player_inventory"]:
@@ -19,6 +21,7 @@ def show_inventory(game_state):
 
 
 def move_player(game_state, direction):
+    """Перемещает игрока в указанном направлении, если это возможно."""
     from labyrinth_game.utils import describe_current_room, random_event
 
     current_room = game_state["current_room"]
@@ -29,7 +32,10 @@ def move_player(game_state, direction):
         
         if next_room == "treasure_room":
             if "rusty_key" in game_state["player_inventory"]:
-                print("Вы используете найденный ключ, чтобы открыть путь в комнату сокровищ.")
+                print(
+                    "Вы используете найденный ключ, "
+                    "чтобы открыть путь в комнату сокровищ."
+                )
                 game_state["current_room"] = next_room
                 game_state["steps_taken"] += 1
                 describe_current_room(game_state)
@@ -46,6 +52,7 @@ def move_player(game_state, direction):
 
 
 def take_item(game_state, item_name):
+    """Позволяет игроку поднять предмет из текущей комнаты."""
     current_room = game_state["current_room"]
     room_data = ROOMS[current_room]
 
@@ -62,6 +69,7 @@ def take_item(game_state, item_name):
 
 
 def use_item(game_state, item_name):
+    """Позволяет игроку использовать предмет из инвентаря."""
     if item_name not in game_state["player_inventory"]:
         print("У вас нет такого предмета.")
         return

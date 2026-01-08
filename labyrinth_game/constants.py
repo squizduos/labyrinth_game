@@ -9,6 +9,10 @@ COMMANDS = {
     "help": "показать это сообщение",
 }
 
+EVENT_PROBABILITY = 10
+DEATH_THRESHOLD = 3
+EVENT_TYPE_COUNT = 3
+
 ROOMS = {
     "entrance": {
         "description": (
